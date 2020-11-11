@@ -1,0 +1,138 @@
+<!-- code altered from http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/ -->
+<html>
+<head>
+<style>
+svg {display: block;}
+body{
+  margin:9;
+  padding:9;
+  color: hsla(94, 100%, 45%, 1);  background: #000000;
+
+}
+A:link    { color: #7FFF00; Text-Decoration: none; }
+A:visited { color: #7FFF00; Text-Decoration: none; }
+A:active  { color: #0000FF; Text-Decoration: none; }
+A:hover   { color: #D2691E; Text-Decoration: none; }
+
+
+@media (min-width: 768px)
+.col-md-5 {
+    -ms-flex: 0 0 41.666667%;
+    flex: 0 0 51.666667%;
+    max-width: 62.666667%;
+}
+
+</style>
+</head>
+<body>
+  <center>
+<div id="square" style="align: center; width: 100%; height: 100%;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 55" onload="makeDraggable(evt)">
+    
+    <style>
+      .static {
+        cursor: not-allowed;
+      }
+      .draggable {
+        cursor: move;
+      }
+    </style>
+    
+    <script type="text/javascript">
+      function makeDraggable(evt) {
+        var svg = evt.target;
+
+        svg.addEventListener('mousedown', startDrag);
+        svg.addEventListener('mousemove', drag);
+        svg.addEventListener('mouseup', endDrag);
+        svg.addEventListener('mouseleave', endDrag);
+        svg.addEventListener('touchstart', startDrag);
+        svg.addEventListener('touchmove', drag);
+        svg.addEventListener('touchend', endDrag);
+        svg.addEventListener('touchleave', endDrag);
+        svg.addEventListener('touchcancel', endDrag);
+
+        var selectedElement, offset, transform,
+            bbox, minX, maxX, minY, maxY;
+
+        var boundaryX1 = 10.5;
+        var boundaryX2 = 30;
+        var boundaryY1 = 2.2;
+        var boundaryY2 = 19.2;
+
+        function getMousePosition(evt) {
+          var CTM = svg.getScreenCTM();
+          if (evt.touches) { evt = evt.touches[0]; }
+          return {
+            x: (evt.clientX - CTM.e) / CTM.a,
+            y: (evt.clientY - CTM.f) / CTM.d
+          };
+        }
+
+        function startDrag(evt) {
+          if (evt.target.classList.contains('draggable')) {
+            selectedElement = evt.target;
+            offset = getMousePosition(evt);
+
+            // Make sure the first transform on the element is a translate transform
+            var transforms = selectedElement.transform.baseVal;
+
+            if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+              // Create an transform that translates by (0, 0)
+              var translate = svg.createSVGTransform();
+              translate.setTranslate(0, 0);
+              selectedElement.transform.baseVal.insertItemBefore(translate, 0);
+            }
+
+            // Get initial translation
+            transform = transforms.getItem(0);
+            offset.x -= transform.matrix.e;
+            offset.y -= transform.matrix.f;
+
+
+          }
+        }
+
+        function drag(evt) {
+          if (selectedElement) {
+            evt.preventDefault();
+
+            var coord = getMousePosition(evt);
+            var dx = coord.x - offset.x;
+            var dy = coord.y - offset.y;
+
+
+
+            transform.setTranslate(dx, dy);
+          }
+        }
+
+        function endDrag(evt) {
+          selectedElement = false;
+        }
+      }
+     </script>
+
+    <text fill="#FF3333" class="draggable" x="25" y="15" text-anchor="middle" font-size="3px" alignment-baseline="middle" transform="translate(-18.9337 -12.3354)">SUS</text>
+    <text fill="#BBBBCC" class="draggable" x="25" y="15" text-anchor="middle" font-size="3px" alignment-baseline="middle" transform="translate(-1.11033 27.3397)">safe</text>
+
+
+    <polygon fill="#13832d" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(1.37333 23.3)"></polygon>
+    <polygon fill="#142ed0" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(7.24 16.09)"></polygon>
+    <polygon fill="#3f484e" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(-4.89 15.9667)"></polygon>
+    <polygon fill="#4ff03a" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(-4.73667 8.14667)"></polygon>
+    <polygon fill="#53e3ce" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(7.05333 23.2133)"></polygon>
+    <polygon fill="#6b2fbe" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(13.1667 16.4367)"></polygon>
+    <polygon fill="#73481e" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(13.13 8.66)"></polygon>
+    <polygon fill="#c71013" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(12.7467 23.4667)"></polygon>
+    <polygon fill="#d6e3f3" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(1.45333 8.31)"></polygon>
+    <polygon fill="#ee55ba" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(7.37 8.61)"></polygon>
+    <polygon fill="#ef7d12" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(-4.32333 22.98)"></polygon>
+    <polygon fill="#f7f559" class="draggable" points="7.4598 6.9318, 7.4598 6.7159, 7.5098 5.3140, 8.5475 4.1876, 8.8267 4.1186, 9.1126 3.2536, 9.9659 2.0845, 11.3533 1.9587, 12.9488 2.8332, 13.2353 3.2413, 13.8717 5.1558, 13.6430 5.5342, 13.7036 6.6767, 13.4239 8.9209, 13.1236 9.8438, 11.8550 9.9677, 11.5070 8.9450, 11.5000 8.7884, 11.1424 8.9380, 11.1032 9.3461, 10.7005 10.1543, 10.0237 10.3597, 9.7965 10.3597, 9.3527 10.2519, 8.7669 9.0182, 8.6436 8.7419, 7.6405 7.9370, 7.4598 6.9318" transform="translate(1.43 15.8467)"></polygon>
+
+</svg>
+</div>
+</center>
+
+
+</body></html>
